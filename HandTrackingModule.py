@@ -10,19 +10,18 @@ class handDetector():
         self.maxHands = maxHands
         self.detectionCon = detectionCon
         self.trackCon = trackCon
-
         self.mpHands = mp.solutions.hands
-        self.hands = self.mpHands.Hands(self.mode, self.maxHands,self.detectionCon, self.trackCon)
+        self.hands = self.mpHands.Hands(self.mode, self.maxHands, self.detectionCon, self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
         self.tipIds = [4, 8, 12, 16, 20]
 
     def findHands(self, img, draw=True):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        self.results = self.hands.process(imgRGB)
-        # print(results.multi_hand_landmarks)
+        self.result = self.hands.process(imgRGB)
+        print(result.multi_hand_landmarks)
 
-        if self.results.multi_hand_landmarks:
-            for handLms in self.results.multi_hand_landmarks:
+        if self.result.multi_hand_landmarks:
+            for handLms in self.result.multi_hand_landmarks:
                 if draw:
                     self.mpDraw.draw_landmarks(img, handLms,self.mpHands.HAND_CONNECTIONS)
 
@@ -33,21 +32,21 @@ class handDetector():
         yList = []
         bbox = []
         self.lmList = []
-        if self.results.multi_hand_landmarks:
-            myHand = self.results.multi_hand_landmarks[handNo]
+        if self.result.multi_hand_landmarks:
+            myHand = self.result.multi_hand_landmarks[handNo]
             for id, lm in enumerate(myHand.landmark):
-                # print(id, lm)
+                print(id, lm)
                 h, w, c = img.shape
                 cx, cy = int(lm.x * w), int(lm.y * h)
                 xList.append(cx)
                 yList.append(cy)
-                # print(id, cx, cy)
+                print(id, cx, cy)
                 self.lmList.append([id, cx, cy])
                 if draw:
                     cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
 
-        xmin, xmax = min(xList,default="Empty"), max(xList,default="Empty")
-        ymin, ymax = min(yList,default="Empty"), max(yList,default="Empty")
+        xmin, xmax = min(xList, default="Empty"), max(xList, default="Empty")
+        ymin, ymax = min(yList, default="Empty"), max(yList, default="Empty")
         bbox = xmin, ymin, xmax, ymax
 
         
@@ -68,11 +67,11 @@ class handDetector():
             else:
                 fingers.append(0)
 
-            # totalFingers = fingers.count(1)
+            totalFingers = fingers.count(1)
 
         return fingers
 
-    def findDistance(self, p1, p2, img, draw=True,r=15, t=3):
+    def findDistance(self, p1, p2, img, draw=True, r=15, t=3):
         x1, y1 = self.lmList[p1][1:]
         x2, y2 = self.lmList[p2][1:]
         cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
@@ -103,7 +102,6 @@ def main():
         pTime = cTime
 
         cv2.putText(img, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3,(255, 0, 255), 3)
-
         cv2.imshow("Image", img)
         cv2.waitKey(1)
 
