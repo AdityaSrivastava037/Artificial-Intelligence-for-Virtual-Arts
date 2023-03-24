@@ -4,17 +4,17 @@ import time
 import os
 import HandTrackingModule as htm
 def virtual_Painter():
-    # print("started")
+    print("started")
     brushThickness = 5
     eraserThickness = 150
     folderPath = "Header"
     myList = os.listdir(folderPath)
-    # print(myList)
+    print(myList)
     overlayList = []
     for imPath in myList:
         image = cv2.imread(f'{folderPath}/{imPath}')
         overlayList.append(image)
-    # print(len(overlayList))
+    print(len(overlayList))
     header = overlayList[0]
     drawColor = (255, 0, 255)
     shape = 'freestyle'
@@ -36,20 +36,20 @@ def virtual_Painter():
         lmList = detector.findPosition(img, draw=False)
 
         if len(lmList) != 0:
-            # print(lmList)
+            print(lmList)
 
             # tip of index and middle fingers
-            x1, y1 = lmList[8][1:]
-            x2, y2 = lmList[12][1:]
-            x0, y0 = lmList[4][1:]
+            x1, y1 = lmList[8][1]:
+            x2, y2 = lmList[12][1]:
+            x0, y0 = lmList[4][1]:
             # 3. Check which fingers are up
             fingers = detector.fingersUp()
-            # print(fingers)
+            print(fingers)
 
             # 4. If Selection Mode - Two finger are up
             if fingers[1] and fingers[2]:
                 xp, yp = 0, 0
-                # print("Selection Mode")
+                print("Selection Mode")
                 # # Checking for the click
                 if y1 < 120:
                     if 250 < x1 < 450:
@@ -107,7 +107,7 @@ def virtual_Painter():
                 cv2.rectangle(img, (x1, y1 - 25), (x2, y2 + 25), drawColor, cv2.FILLED)
             if fingers[1] and fingers[2] == False:
                 cv2.circle(img, (x1, y1), 15, drawColor)
-                # print("Drawing Mode")
+                print("Drawing Mode")
                 if xp == 0 and yp == 0:
                     xp, yp = x1, y1
 
@@ -115,16 +115,16 @@ def virtual_Painter():
 
                 if drawColor == (0, 0, 0):
                     eraserThickness = 50
-                    z1, z2 = lmList[4][1:]
-                    # print(z1,z2)
+                    z1, z2 = lmList[4][1]:
+                    print(z1,z2)
                     result = int(((((z1 - x1) ** 2) + ((z2 - y1) ** 2)) ** 0.5))
-                    # print(result)
+                    print(result)
                     if result < 0:
                         result = -1 * result
                     u = result
                     if fingers[1] and fingers[4]:
                         eraserThickness = u
-                    # print(eraserThickness)
+                    print(eraserThickness)
                     cv2.putText(img, str("eraserThickness="), (0, 700), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 255), 3)
                     cv2.putText(img, str(int(eraserThickness)), (450, 700), cv2.FONT_HERSHEY_PLAIN, 3,
                                 (255, 0, 255), 3)
@@ -133,22 +133,22 @@ def virtual_Painter():
 
                 else:
                     brushThickness = 5
-                    # z1, z2 = lmList[4][1:]
-                    # print(z1,z2)
-                    # result = int(((((z1 - x1) ** 2) + ((z2 - y1) ** 2)) ** 0.5))
-                    # print(result)
-                    # if result < 0:
-                    #     result = -1 * result
-                    # u = result
-                    # brushThickness = int(u)
-                    # print(eraserThickness)
+                    z1, z2 = lmList[4][1]:
+                    print(z1,z2)
+                    result = int(((((z1 - x1) ** 2) + ((z2 - y1) ** 2)) ** 0.5))
+                    print(result)
+                    if result < 0:
+                         result = -1 * result
+                    u = result
+                    brushThickness = int(u)
+                    print(eraserThickness)
 
                     #draw
                     if shape == 'freestyle':
-                        z1, z2 = lmList[4][1:]
-                        # print(z1,z2)
+                        z1, z2 = lmList[4][1]:
+                        print(z1,z2)
                         result = int(((((z1 - x1) ** 2) + ((z2 - y1) ** 2)) ** 0.5))
-                        # print(result)
+                        print(result)
                         if result < 0:
                             result = -1 * result
                         u = result
@@ -163,10 +163,10 @@ def virtual_Painter():
 
                     # Rectangle
                     if shape == 'rectangle':
-                        z1, z2 = lmList[4][1:]
-                        # print(z1,z2)
+                        z1, z2 = lmList[4][1]:
+                        print(z1,z2)
                         result = int(((((z1 - x1) ** 2) + ((z2 - y1) ** 2)) ** 0.5))
-                        # print(result)
+                        print(result)
                         if result < 0:
                             result = -1 * result
                         u = result
@@ -182,10 +182,10 @@ def virtual_Painter():
 
                     #Circle
                     if shape == 'circle':
-                        z1, z2 = lmList[4][1:]
-                        # print(z1,z2)
+                        z1, z2 = lmList[4][1]:
+                        print(z1,z2)
                         result = int(((((z1 - x1) ** 2) + ((z2 - y1) ** 2)) ** 0.5))
-                        # print(result)
+                        print(result)
                         if result < 0:
                             result = -1 * result
                         u = result
@@ -199,8 +199,8 @@ def virtual_Painter():
 
                     #Ellipse
                     if shape == 'elipse':
-                        z1, z2 = lmList[4][1:]
-                        # cv2.ellipse(img,(x1,y1),(int(z1/2),int(z2/2)),0,0,360,255,0)
+                        z1, z2 = lmList[4][1]:
+                        cv2.ellipse(img,(x1,y1),(int(z1/2),int(z2/2)),0,0,360,255,0)
                         a = z1-x1
                         b= (z2-x2)
                         if x1 >250:
@@ -226,18 +226,18 @@ def virtual_Painter():
                 imgCanvas = np.zeros((720, 1280, 3), np.uint8)
 
         imgGray = cv2.cvtColor(imgCanvas, cv2.COLOR_BGR2GRAY)
-        _, imgInv = cv2.threshold(imgGray, 50, 255, cv2.THRESH_BINARY_INV)
+        imgInv = cv2.threshold(imgGray, 50, 255, cv2.THRESH_BINARY_INV)
         imgInv = cv2.cvtColor(imgInv, cv2.COLOR_GRAY2BGR)
         img = cv2.bitwise_and(img, imgInv)
         img = cv2.bitwise_or(img, imgCanvas)
 
         # Setting the header image
         img[0:210, 0:1280] = header
-        # img = cv2.addWeighted(img,0.5,imgCanvas,0.5,0)
+        img = cv2.addWeighted(img,0.5,imgCanvas,0.5,0)
 
         cv2.imshow("Image", img)
-        # cv2.imshow("Canvas", imgCanvas)
-        # cv2.imshow("Inv", imgInv)
+        cv2.imshow("Canvas", imgCanvas)
+        cv2.imshow("Inv", imgInv)
         cv2.waitKey(1)
 
 
@@ -245,7 +245,3 @@ def virtual_Painter():
 
 
 virtual_Painter()
-
-
-
-
